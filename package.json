@@ -1,0 +1,159 @@
+{
+  "name": "env-bridge",
+  "displayName": "EnvBridge",
+  "description": "Push and pull .env files to GitHub Secrets & GitLab CI/CD Variables without leaving VS Code. Per-variable secret/plain control via inline CodeLens.",
+  "version": "0.0.1",
+  "publisher": "YOUR_PUBLISHER_ID",
+  "icon": "media/icon.png",
+  "galleryBanner": {
+    "color": "#0d1117",
+    "theme": "dark"
+  },
+  "engines": {
+    "vscode": "^1.110.0"
+  },
+  "categories": [
+    "Other",
+    "SCM Providers"
+  ],
+  "keywords": [
+    "env",
+    "dotenv",
+    "secrets",
+    "github",
+    "gitlab",
+    "sync",
+    "github secrets",
+    "gitlab ci/cd",
+    "environment variables",
+    "ci/cd",
+    "devops",
+    "secret management",
+    "deployment",
+    "12-factor",
+    "env file"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./dist/extension.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/YOUR_USERNAME/env-bridge"
+  },
+  "bugs": {
+    "url": "https://github.com/YOUR_USERNAME/env-bridge/issues"
+  },
+  "homepage": "https://github.com/YOUR_USERNAME/env-bridge#readme",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "envsync",
+          "title": "EnvSync",
+          "icon": "media/icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "envsync": [
+        {
+          "id": "envsync.panel",
+          "name": "Sync Panel"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "envsync.push",
+        "title": "EnvSync: Push",
+        "icon": "$(cloud-upload)"
+      },
+      {
+        "command": "envsync.pushMapping",
+        "title": "EnvSync: Push Mapping",
+        "icon": "$(cloud-upload)"
+      },
+      {
+        "command": "envsync.toggleEnabled",
+        "title": "EnvSync: Toggle Enabled"
+      },
+      {
+        "command": "envsync.toggleType",
+        "title": "EnvSync: Toggle Type"
+      },
+      {
+        "command": "envsync.manageTokens",
+        "title": "EnvSync: Manage Tokens",
+        "icon": "$(key)"
+      },
+      {
+        "command": "envsync.addMapping",
+        "title": "EnvSync: New Mapping",
+        "icon": "$(add)"
+      },
+      {
+        "command": "envsync.deleteMapping",
+        "title": "EnvSync: Remove Mapping",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "envsync.pull",
+        "title": "EnvSync: Pull from Remote",
+        "icon": "$(cloud-download)"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "envsync.push",
+          "when": "resourceFilename =~ /^\\.env/",
+          "group": "navigation"
+        }
+      ],
+      "view/title": [
+        {
+          "command": "envsync.addMapping",
+          "when": "view == envsync.panel",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "envsync.deleteMapping",
+          "when": "view == envsync.panel && viewItem == mapping",
+          "group": "inline"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "pnpm run package",
+    "compile": "pnpm run check-types && pnpm run lint && node esbuild.js",
+    "watch": "npm-run-all -p watch:*",
+    "watch:esbuild": "node esbuild.js --watch",
+    "watch:tsc": "tsc --noEmit --watch --project tsconfig.json",
+    "package": "pnpm run check-types && pnpm run lint && node esbuild.js --production",
+    "compile-tests": "tsc -p . --outDir out",
+    "watch-tests": "tsc -p . -w --outDir out",
+    "pretest": "pnpm run compile-tests && pnpm run compile && pnpm run lint",
+    "check-types": "tsc --noEmit",
+    "lint": "eslint src",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.10",
+    "@types/node": "22.x",
+    "@types/vscode": "^1.110.0",
+    "@vscode/test-cli": "^0.0.12",
+    "@vscode/test-electron": "^2.5.2",
+    "esbuild": "^0.27.1",
+    "eslint": "^9.39.1",
+    "npm-run-all": "^4.1.5",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.48.1"
+  },
+  "dependencies": {
+    "libsodium-wrappers": "^0.8.2"
+  }
+}
