@@ -1,0 +1,86 @@
+# Business Source License 1.1
+
+Licensed Work: EnvSync
+Licensor: ArseniyDev
+
+Copyright (c) 2026 ArseniyDev
+
+---
+
+## Business Source License 1.1
+
+Parameters
+
+Licensor: ArseniyDev
+
+Licensed Work: EnvSync (including all source code, documentation, and related materials in this repository)
+
+Change Date: 2030-03-16
+
+Change License: Apache License, Version 2.0
+
+---
+
+## Additional Use Grant
+
+You may use the Licensed Work for personal use and internal business use, including development, testing, and educational purposes, provided such use does not involve distributing, publishing, sublicensing, or offering the Licensed Work or any derivative work as a product or service.
+
+For clarity, the following is permitted:
+
+- Using the extension for personal productivity
+- Using the extension within a company or organization
+- Studying, modifying, or forking the code for learning or internal use
+- Contributing improvements via pull requests
+
+The following is **not permitted** without explicit permission from the Licensor:
+
+- Publishing the Licensed Work or derivatives as a competing extension
+- Selling or licensing the Licensed Work or derivatives
+- Offering the Licensed Work or derivatives as part of a commercial product or service
+- Distributing modified or unmodified versions intended to compete with the Licensed Work
+
+Commercial licensing exceptions may be granted by the Licensor.
+
+---
+
+## Change License
+
+On the Change Date specified above, the Licensed Work will automatically become available under the Apache License, Version 2.0.
+
+---
+
+## Full License Text
+
+Use of the Licensed Work is governed by the Business Source License 1.1 included below.
+
+### Business Source License 1.1
+
+Terms used in this license are defined as follows:
+
+“Licensed Work” means the software provided by the Licensor under this License.
+
+“Licensor” means the copyright holder of the Licensed Work.
+
+“Change Date” means the date after which the Licensed Work will be governed by the Change License.
+
+Until the Change Date, use of the Licensed Work is governed by this Business Source License and the Additional Use Grant above.
+
+On the Change Date, the Licensed Work will be governed by the Change License.
+
+The Licensor grants you the right to copy, modify, create derivative works, redistribute, and make non-production use of the Licensed Work, subject to the restrictions defined in the Additional Use Grant.
+
+If you violate the terms of this License, your rights under this License will terminate automatically.
+
+---
+
+## Disclaimer
+
+THE LICENSED WORK IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT.
+
+IN NO EVENT SHALL THE LICENSOR BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY ARISING FROM THE USE OF THE LICENSED WORK.
+
+---
+
+## Apache License (Future License)
+
+Beginning on the Change Date (2030-03-16), the Licensed Work will be licensed under the Apache License, Version 2.0.
