@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import { StorageKeys } from '../constants/storage';
 
 export interface VarState {
   enabled: boolean;
@@ -6,13 +7,12 @@ export interface VarState {
 }
 
 const DEFAULT_STATE: VarState = { enabled: true, isSecret: true };
-const KEY_PREFIX = 'envsync.varState.';
 
 export class VarStateService {
   constructor(private readonly state: vscode.Memento) {}
 
   getState(relPath: string, key: string): VarState {
-    const all = this.state.get<Record<string, VarState>>(KEY_PREFIX + relPath, {});
+    const all = this.state.get<Record<string, VarState>>(StorageKeys.varState(relPath), {});
     return all[key] ?? DEFAULT_STATE;
   }
 
@@ -30,9 +30,19 @@ export class VarStateService {
     return next;
   }
 
+  async seedFromPull(relPath: string, entries: Array<{ key: string; isSecret: boolean }>): Promise<void> {
+    const all = this.state.get<Record<string, VarState>>(StorageKeys.varState(relPath), {});
+    for (const { key, isSecret } of entries) {
+      if (!all[key]) {
+        all[key] = { enabled: true, isSecret };
+      }
+    }
+    await this.state.update(StorageKeys.varState(relPath), all);
+  }
+
   private async _save(relPath: string, key: string, state: VarState): Promise<void> {
-    const all = this.state.get<Record<string, VarState>>(KEY_PREFIX + relPath, {});
+    const all = this.state.get<Record<string, VarState>>(StorageKeys.varState(relPath), {});
     all[key] = state;
-    await this.state.update(KEY_PREFIX + relPath, all);
+    await this.state.update(StorageKeys.varState(relPath), all);
   }
 }

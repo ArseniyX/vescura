@@ -11,6 +11,7 @@ import { VarStateService } from "./infrastructure/VarStateService";
 import { WorkspaceScanner } from "./infrastructure/WorkspaceScanner";
 import { EnvSyncCodeLensProvider } from "./ui/EnvSyncCodeLensProvider";
 import { EnvSyncTreeProvider } from "./ui/EnvSyncTreeProvider";
+import { Commands, Views } from "./constants/commands";
 
 export function activate(context: vscode.ExtensionContext): void {
     try {
@@ -61,7 +62,7 @@ function _activate(context: vscode.ExtensionContext): void {
         ),
     );
 
-    const treeView = vscode.window.createTreeView("envsync.panel", {
+    const treeView = vscode.window.createTreeView(Views.panel, {
         treeDataProvider: treeProvider,
         showCollapseAll: false,
     });
@@ -71,7 +72,7 @@ function _activate(context: vscode.ExtensionContext): void {
 
     context.subscriptions.push(
         vscode.commands.registerCommand(
-            "envsync.toggleEnabled",
+            Commands.toggleEnabled,
             async (relPath: string, key: string) => {
                 await varState.toggleEnabled(relPath, key);
                 codeLensProvider.refresh();
@@ -81,7 +82,7 @@ function _activate(context: vscode.ExtensionContext): void {
 
     context.subscriptions.push(
         vscode.commands.registerCommand(
-            "envsync.toggleType",
+            Commands.toggleType,
             async (relPath: string, key: string) => {
                 await varState.toggleType(relPath, key);
                 codeLensProvider.refresh();
@@ -93,11 +94,11 @@ function _activate(context: vscode.ExtensionContext): void {
 
     // Push from editor title bar (active .env file)
     context.subscriptions.push(
-        vscode.commands.registerCommand("envsync.push", async () => {
+        vscode.commands.registerCommand(Commands.push, async () => {
             const editor = vscode.window.activeTextEditor;
             if (!editor) {
                 vscode.window.showWarningMessage(
-                    "EnvSync: Open a .env file first.",
+                    "Vescura: Open a .env file first.",
                 );
                 return;
             }
@@ -116,11 +117,11 @@ function _activate(context: vscode.ExtensionContext): void {
 
             if (!mapping) {
                 const add = await vscode.window.showWarningMessage(
-                    `EnvSync: No mapping configured for "${relPath}".`,
+                    `Vescura: No mapping configured for "${relPath}".`,
                     "New Mapping",
                 );
                 if (add) {
-                    vscode.commands.executeCommand("envsync.addMapping");
+                    vscode.commands.executeCommand(Commands.addMapping);
                 }
                 return;
             }
@@ -132,7 +133,7 @@ function _activate(context: vscode.ExtensionContext): void {
     // Push from tree view (mapping node)
     context.subscriptions.push(
         vscode.commands.registerCommand(
-            "envsync.pushMapping",
+            Commands.pushMapping,
             async (mapping: EnvSyncMapping) => {
                 await executePush(mapping, syncService, treeProvider);
             },
@@ -142,7 +143,7 @@ function _activate(context: vscode.ExtensionContext): void {
     // ── Manage tokens ─────────────────────────────────────────────────────────
 
     context.subscriptions.push(
-        vscode.commands.registerCommand("envsync.manageTokens", async () => {
+        vscode.commands.registerCommand(Commands.manageTokens, async () => {
             const platform = await vscode.window.showQuickPick(
                 [
                     {
@@ -155,7 +156,7 @@ function _activate(context: vscode.ExtensionContext): void {
                     },
                 ],
                 {
-                    title: "EnvSync: Manage Tokens",
+                    title: "Vescura: Manage Tokens",
                     placeHolder: "Select platform",
                 },
             );
@@ -170,7 +171,7 @@ function _activate(context: vscode.ExtensionContext): void {
     // ── Add / remove mappings ─────────────────────────────────────────────────
 
     context.subscriptions.push(
-        vscode.commands.registerCommand("envsync.addMapping", async () => {
+        vscode.commands.registerCommand(Commands.addMapping, async () => {
             await addMappingWizard(
                 configManager,
                 scanner,
@@ -185,7 +186,7 @@ function _activate(context: vscode.ExtensionContext): void {
 
     context.subscriptions.push(
         vscode.commands.registerCommand(
-            "envsync.deleteMapping",
+            Commands.deleteMapping,
             async (node) => {
                 if (!node?.mapping) {
                     return;
@@ -212,11 +213,12 @@ function _activate(context: vscode.ExtensionContext): void {
     // ── Pull command ──────────────────────────────────────────────────────────
 
     context.subscriptions.push(
-        vscode.commands.registerCommand("envsync.pull", async () => {
+        vscode.commands.registerCommand(Commands.pull, async () => {
             await pullWizard(
                 configManager,
                 syncService,
                 tokenService,
+                varState,
                 githubAdapter,
                 gitlabAdapter,
             );
@@ -243,12 +245,12 @@ async function executePush(
         result = await vscode.window.withProgress(
             {
                 location: vscode.ProgressLocation.Notification,
-                title: `EnvSync: Pushing "${mapping.file}"…`,
+                title: `Vescura: Pushing "${mapping.file}"…`,
             },
             () => syncService.pushMapping(mapping),
         );
     } catch (err) {
-        vscode.window.showErrorMessage(`EnvSync: ${err}`);
+        vscode.window.showErrorMessage(`Vescura: ${err}`);
         return;
     }
 
@@ -259,7 +261,7 @@ async function executePush(
             : (t as import("./domain/types").GitLabTarget).projectId;
 
     vscode.window.showInformationMessage(
-        `EnvSync: Pushed ${result.pushed} variable${result.pushed !== 1 ? "s" : ""} to ${targetName}.`,
+        `Vescura: Pushed ${result.pushed} variable${result.pushed !== 1 ? "s" : ""} to ${targetName}.`,
     );
     treeProvider.refresh();
 }
@@ -290,7 +292,7 @@ async function manageToken(
                       ]
                     : []),
             ],
-            { title: "EnvSync: GitHub Authentication" },
+            { title: "Vescura: GitHub Authentication" },
         );
         if (!action) {
             return;
@@ -309,7 +311,7 @@ async function manageToken(
             },
             () => tokenService.signInGitHub(),
         );
-        vscode.window.showInformationMessage("EnvSync: GitHub connected.");
+        vscode.window.showInformationMessage("Vescura: GitHub connected.");
         return;
     }
 
@@ -331,7 +333,7 @@ async function manageToken(
                 ? [{ label: "$(trash) Remove token", value: "delete" }]
                 : []),
         ],
-        { title: "EnvSync: GitLab Authentication" },
+        { title: "Vescura: GitLab Authentication" },
     );
     if (!action) {
         return;
@@ -340,19 +342,19 @@ async function manageToken(
     if (action.value === "open") {
         vscode.env.openExternal(
             vscode.Uri.parse(
-                "https://gitlab.com/-/user_settings/personal_access_tokens?name=EnvSync&scopes=api",
+                "https://gitlab.com/-/user_settings/personal_access_tokens?name=Vescura&scopes=api",
             ),
         );
     }
 
     if (action.value === "delete") {
         await tokenService.deleteToken("gitlab");
-        vscode.window.showInformationMessage("EnvSync: GitLab token removed.");
+        vscode.window.showInformationMessage("Vescura: GitLab token removed.");
         return;
     }
 
     const token = await vscode.window.showInputBox({
-        title: "EnvSync: GitLab Personal Access Token",
+        title: "Vescura: GitLab Personal Access Token",
         prompt: "Requires api scope.",
         password: true,
         ignoreFocusOut: true,
@@ -371,7 +373,7 @@ async function manageToken(
         () => syncService.validateAndSaveGitLabToken(token.trim()),
     );
     vscode.window.showInformationMessage(
-        "EnvSync: GitLab token saved and validated.",
+        "Vescura: GitLab token saved and validated.",
     );
 }
 
@@ -388,7 +390,7 @@ async function addMappingWizard(
     const envFiles = await scanner.scanEnvFiles();
     if (envFiles.length === 0) {
         vscode.window.showWarningMessage(
-            "EnvSync: No .env files found in workspace root.",
+            "Vescura: No .env files found in workspace root.",
         );
         return;
     }
@@ -400,7 +402,7 @@ async function addMappingWizard(
             value: f.name,
         })),
         {
-            title: "EnvSync: Select .env file to map (1/3)",
+            title: "Vescura: Select .env file to map (1/3)",
             placeHolder: ".env file",
         },
     );
@@ -419,7 +421,7 @@ async function addMappingWizard(
                 value: "gitlab" as PlatformKind,
             },
         ],
-        { title: "EnvSync: Select platform (2/3)" },
+        { title: "Vescura: Select platform (2/3)" },
     );
     if (!platformChoice) {
         return;
@@ -441,7 +443,7 @@ async function addMappingWizard(
 
     await configManager.addMapping({ file: fileChoice.value, target });
     vscode.window.showInformationMessage(
-        `EnvSync: Mapping added for "${fileChoice.value}". Open the file to configure variables with CodeLens.`,
+        `Vescura: Mapping added for "${fileChoice.value}". Open the file to configure variables with CodeLens.`,
     );
 }
 
@@ -451,6 +453,7 @@ async function pullWizard(
     configManager: ConfigManager,
     syncService: SyncService,
     tokenService: TokenService,
+    varState: VarStateService,
     githubAdapter: GitHubAdapter,
     gitlabAdapter: GitLabAdapter,
 ): Promise<void> {
@@ -459,7 +462,7 @@ async function pullWizard(
             { label: "$(mark-github) GitHub", value: "github" as PlatformKind },
             { label: "$(gitlab) GitLab", value: "gitlab" as PlatformKind },
         ],
-        { title: "EnvSync: Pull — Select platform (1/3)" },
+        { title: "Vescura: Pull — Select platform (1/3)" },
     );
     if (!platformChoice) {
         return;
@@ -488,7 +491,7 @@ async function pullWizard(
     const suggestedFile = !envName || DEV_ENVS.has(envName.toLowerCase()) ? ".env" : `.env.${envName}`;
 
     const fileInput = await vscode.window.showInputBox({
-        title: "EnvSync: Pull — Choose local file name (3/3)",
+        title: "Vescura: Pull — Choose local file name (3/3)",
         value: suggestedFile,
         prompt: "File will be created in your workspace root",
         validateInput: (v) =>
@@ -500,7 +503,7 @@ async function pullWizard(
 
     const root = configManager.workspaceRoot;
     if (!root) {
-        vscode.window.showErrorMessage("EnvSync: No workspace folder open.");
+        vscode.window.showErrorMessage("Vescura: No workspace folder open.");
         return;
     }
 
@@ -528,18 +531,18 @@ async function pullWizard(
         entries = await vscode.window.withProgress(
             {
                 location: vscode.ProgressLocation.Notification,
-                title: "EnvSync: Fetching from remote…",
+                title: "Vescura: Fetching from remote…",
             },
             () => syncService.fetchRemote(target!),
         );
     } catch (err) {
-        vscode.window.showErrorMessage(`EnvSync: ${err}`);
+        vscode.window.showErrorMessage(`Vescura: ${err}`);
         return;
     }
 
     if (entries.length === 0) {
         vscode.window.showWarningMessage(
-            "EnvSync: No variables or secrets found on remote.",
+            "Vescura: No variables or secrets found on remote.",
         );
         return;
     }
@@ -570,13 +573,19 @@ async function pullWizard(
     // Save mapping automatically
     await configManager.addMapping({ file: fileInput.trim(), target });
 
+    // Seed var state so secrets/variables reflect remote types instead of defaulting to secret
+    await varState.seedFromPull(
+        fileInput.trim(),
+        entries.map(e => ({ key: e.key, isSecret: e.value === null })),
+    );
+
     // Open the file
     await vscode.window.showTextDocument(fileUri);
 
     const msg =
         empty > 0
-            ? `EnvSync: Pulled ${entries.length} entries (${empty} secret${empty !== 1 ? "s" : ""} need manual values).`
-            : `EnvSync: Pulled ${entries.length} entries successfully.`;
+            ? `Vescura: Pulled ${entries.length} entries (${empty} secret${empty !== 1 ? "s" : ""} need manual values).`
+            : `Vescura: Pulled ${entries.length} entries successfully.`;
     vscode.window.showInformationMessage(msg);
 }
 
@@ -586,13 +595,6 @@ async function pickGitHubTarget(
 ): Promise<SyncTarget | undefined> {
     let token = await tokenService.getToken("github");
     if (!token) {
-        const signIn = await vscode.window.showInformationMessage(
-            "EnvSync: Sign in to GitHub to browse your repositories.",
-            "Sign in",
-        );
-        if (!signIn) {
-            return undefined;
-        }
         token = await vscode.window.withProgress(
             {
                 location: vscode.ProgressLocation.Notification,
@@ -610,7 +612,7 @@ async function pickGitHubTarget(
         () => adapter.listTargets(token!),
     );
     if (repos.length === 0) {
-        vscode.window.showWarningMessage("EnvSync: No repositories found.");
+        vscode.window.showWarningMessage("Vescura: No repositories found.");
         return undefined;
     }
 
@@ -620,7 +622,7 @@ async function pickGitHubTarget(
             description: r.description,
             target: r.target,
         })),
-        { title: "EnvSync: Select repository (3/3)", matchOnDescription: true },
+        { title: "Vescura: Select repository (3/3)", matchOnDescription: true },
     );
     if (!repoChoice) {
         return undefined;
@@ -653,7 +655,7 @@ async function pickGitHubTarget(
                 value: e,
             })),
         ],
-        { title: `EnvSync: Select environment for ${repo} (optional)` },
+        { title: `Vescura: Select environment for ${repo} (optional)` },
     );
     if (!envChoice) {
         return undefined;
@@ -674,7 +676,7 @@ async function pickGitLabTarget(
     let token = await tokenService.getToken("gitlab");
     if (!token) {
         const open = await vscode.window.showInformationMessage(
-            "EnvSync: A GitLab Personal Access Token (api scope) is required.",
+            "Vescura: A GitLab Personal Access Token (api scope) is required.",
             "Open token page",
             "I have a token",
         );
@@ -684,12 +686,12 @@ async function pickGitLabTarget(
         if (open === "Open token page") {
             vscode.env.openExternal(
                 vscode.Uri.parse(
-                    "https://gitlab.com/-/user_settings/personal_access_tokens?name=EnvSync&scopes=api",
+                    "https://gitlab.com/-/user_settings/personal_access_tokens?name=Vescura&scopes=api",
                 ),
             );
         }
         const pat = await vscode.window.showInputBox({
-            title: "EnvSync: GitLab Personal Access Token",
+            title: "Vescura: GitLab Personal Access Token",
             prompt: "Requires api scope.",
             password: true,
             ignoreFocusOut: true,
@@ -717,7 +719,7 @@ async function pickGitLabTarget(
         () => adapter.listTargets(token!),
     );
     if (projects.length === 0) {
-        vscode.window.showWarningMessage("EnvSync: No projects found.");
+        vscode.window.showWarningMessage("Vescura: No projects found.");
         return undefined;
     }
 
@@ -727,7 +729,7 @@ async function pickGitLabTarget(
             description: p.description,
             target: p.target,
         })),
-        { title: "EnvSync: Select project (3/3)", matchOnDescription: true },
+        { title: "Vescura: Select project (3/3)", matchOnDescription: true },
     );
     if (!projectChoice) {
         return undefined;
@@ -751,7 +753,7 @@ async function pickGitLabTarget(
             { label: "$(globe) All environments (*)", value: "*" },
             ...envs.map((e) => ({ label: `$(layers) ${e}`, value: e })),
         ],
-        { title: "EnvSync: Select environment scope (optional)" },
+        { title: "Vescura: Select environment scope (optional)" },
     );
     if (!envChoice) {
         return undefined;

@@ -5,8 +5,7 @@ import { ConfigManager } from '../infrastructure/ConfigManager';
 import { TokenService } from '../infrastructure/TokenService';
 import { VarStateService } from '../infrastructure/VarStateService';
 import { WorkspaceScanner } from '../infrastructure/WorkspaceScanner';
-
-const LAST_SYNC_KEY = 'envsync.lastSync';
+import { StorageKeys } from '../constants/storage';
 
 export class SyncService {
   constructor(
@@ -43,7 +42,7 @@ export class SyncService {
     const adapter = this.requireAdapter(target.platform);
     const result = await adapter.push(token, target, entries);
 
-    await this.state.update(`${LAST_SYNC_KEY}.${mapping.file}`, new Date().toISOString());
+    await this.state.update(StorageKeys.lastSync(mapping.file), new Date().toISOString());
 
     return result;
   }
@@ -55,7 +54,7 @@ export class SyncService {
   }
 
   getLastSync(mapping: EnvSyncMapping): string | undefined {
-    return this.state.get<string>(`${LAST_SYNC_KEY}.${mapping.file}`);
+    return this.state.get<string>(StorageKeys.lastSync(mapping.file));
   }
 
   private resolveFilePath(relPath: string): string {
@@ -74,7 +73,7 @@ export class SyncService {
   private async requireToken(platform: PlatformKind): Promise<string> {
     const token = await this.tokens.getToken(platform);
     if (!token) {
-      throw new Error(`No token configured for ${platform}. Run "EnvSync: Manage Tokens".`);
+      throw new Error(`No token configured for ${platform}. Run "Vescura: Manage Tokens".`);
     }
     return token;
   }

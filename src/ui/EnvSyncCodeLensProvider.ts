@@ -1,8 +1,7 @@
 import * as vscode from "vscode";
 import { VarStateService } from "../infrastructure/VarStateService";
-
-// Matches KEY=value lines (same as parser)
-const LINE_RE = /^(?:export\s+)?([\w.]+)\s*=/;
+import { Commands } from "../constants/commands";
+import { LINE_RE } from "../domain/parser/EnvParser";
 
 export class EnvSyncCodeLensProvider implements vscode.CodeLensProvider {
     private readonly _onDidChangeCodeLenses = new vscode.EventEmitter<void>();
@@ -36,7 +35,7 @@ export class EnvSyncCodeLensProvider implements vscode.CodeLensProvider {
                         ? "$(cloud-upload)\u00A0push"
                         : "$(debug-step-over)\u00A0skip",
                     tooltip: "Toggle whether this variable is pushed",
-                    command: "envsync.toggleEnabled",
+                    command: Commands.toggleEnabled,
                     arguments: [relPath, key],
                 }),
             );
@@ -46,7 +45,7 @@ export class EnvSyncCodeLensProvider implements vscode.CodeLensProvider {
                     title: state.isSecret ? "$(lock)\u00A0secret" : "$(eye)\u00A0plain",
                     tooltip:
                         "Toggle between encrypted secret and plain variable",
-                    command: "envsync.toggleType",
+                    command: Commands.toggleType,
                     arguments: [relPath, key],
                 }),
             );

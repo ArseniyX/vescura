@@ -1,7 +1,6 @@
 import * as vscode from 'vscode';
 import { EnvSyncConfig, EnvSyncMapping } from '../domain/types';
-
-const STATE_KEY = 'envsync.config';
+import { StorageKeys } from '../constants/storage';
 const DEFAULT_CONFIG: EnvSyncConfig = { mappings: [] };
 
 export class ConfigManager {
@@ -20,7 +19,7 @@ export class ConfigManager {
   }
 
   read(): EnvSyncConfig {
-    const raw = this.state.get<unknown>(STATE_KEY);
+    const raw = this.state.get<unknown>(StorageKeys.config);
     if (!raw || typeof raw !== 'object') { return DEFAULT_CONFIG; }
     const config = raw as EnvSyncConfig;
     config.mappings = (config.mappings ?? []).filter(
@@ -30,7 +29,7 @@ export class ConfigManager {
   }
 
   async write(config: EnvSyncConfig): Promise<void> {
-    await this.state.update(STATE_KEY, config);
+    await this.state.update(StorageKeys.config, config);
     this._onDidChange.fire(config);
   }
 

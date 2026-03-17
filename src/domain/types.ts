@@ -40,7 +40,7 @@ export interface GitLabTarget {
 
 export type SyncTarget = GitHubTarget | GitLabTarget;
 
-// ── Config (.envsync.json) ────────────────────────────────────────────────────
+// ── Config ────────────────────────────────────────────────────────────────────
 
 export interface EnvSyncMapping {
   file: string; // relative path from workspace root, e.g. ".env.production"

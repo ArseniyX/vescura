@@ -44,7 +44,7 @@ export class WorkspaceScanner {
 
     if (warnings.length > 0) {
       const msgs = warnings.map(w => `Line ${w.line}: ${w.message}`).join('\n');
-      vscode.window.showWarningMessage(`EnvSync: parse warnings in ${fsPath}:\n${msgs}`);
+      vscode.window.showWarningMessage(`Vescura: parse warnings in ${fsPath}:\n${msgs}`);
     }
 
     const name = uri.path.split('/').pop() ?? fsPath;

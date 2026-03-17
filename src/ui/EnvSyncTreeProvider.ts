@@ -8,6 +8,7 @@ import {
 import { ConfigManager } from "../infrastructure/ConfigManager";
 import { TokenService } from "../infrastructure/TokenService";
 import { SyncService } from "../application/SyncService";
+import { Commands } from "../constants/commands";
 
 export type TreeNode = MappingNode | AddMappingNode | PullNode;
 
@@ -31,7 +32,7 @@ export class MappingNode extends vscode.TreeItem {
         this.contextValue = "mapping";
         this.tooltip = hasToken
             ? `${mapping.file} → ${targetLabel(mapping.target)}`
-            : `No token for ${mapping.target.platform} — run "EnvSync: Manage Tokens"`;
+            : `No token for ${mapping.target.platform} — run "Vescura: Manage Tokens"`;
         this.command = {
             command: "vscode.open",
             title: "Open file",
@@ -45,7 +46,7 @@ export class AddMappingNode extends vscode.TreeItem {
     constructor() {
         super("New mapping", vscode.TreeItemCollapsibleState.None);
         this.iconPath = new vscode.ThemeIcon("add");
-        this.command = { command: "envsync.addMapping", title: "New Mapping" };
+        this.command = { command: Commands.addMapping, title: "New Mapping" };
         this.contextValue = "add-mapping";
     }
 }
@@ -55,7 +56,7 @@ export class PullNode extends vscode.TreeItem {
     constructor() {
         super("Pull from remote", vscode.TreeItemCollapsibleState.None);
         this.iconPath = new vscode.ThemeIcon("cloud-download");
-        this.command = { command: "envsync.pull", title: "Pull from Remote" };
+        this.command = { command: Commands.pull, title: "Pull from Remote" };
         this.contextValue = "pull";
         this.tooltip =
             "Fetch variables from GitHub or GitLab and create a local .env file";
@@ -148,8 +149,4 @@ function formatRelative(iso: string): string {
         return `${hours}h ago`;
     }
     return `${Math.floor(hours / 24)}d ago`;
-}
-
-export function platformLabel(platform: PlatformKind): string {
-    return platform === "github" ? "GitHub" : "GitLab";
 }

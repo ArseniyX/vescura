@@ -1,7 +1,7 @@
 import { EnvEntry, ParseResult, ParseWarning } from '../types';
 
 // Matches: KEY=value, KEY="value", KEY='value', export KEY=value
-const LINE_RE = /^(?:export\s+)?([\w.]+)\s*=\s*(.*)/;
+export const LINE_RE = /^(?:export\s+)?([\w.]+)\s*=\s*(.*)/;
 
 export function parse(content: string): ParseResult {
   const entries: EnvEntry[] = [];

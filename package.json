@@ -1,8 +1,9 @@
 {
-  "name": "env-bridge",
-  "displayName": "EnvBridge",
-  "description": "Push and pull .env files to GitHub Secrets & GitLab CI/CD Variables without leaving VS Code. Per-variable secret/plain control via inline CodeLens.",
+  "name": "vescura",
+  "displayName": "Vescura",
+  "description": "Vescura — Push and pull .env files to GitHub Secrets & GitLab CI/CD Variables without leaving VS Code. Per-variable secret/plain control via inline CodeLens.",
   "version": "0.0.1",
+  "license": "Provided license",
   "publisher": "YOUR_PUBLISHER_ID",
   "icon": "media/icon.png",
   "galleryBanner": {
@@ -39,89 +40,89 @@
   "main": "./dist/extension.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/YOUR_USERNAME/env-bridge"
+    "url": "https://github.com/YOUR_USERNAME/vescura"
   },
   "bugs": {
-    "url": "https://github.com/YOUR_USERNAME/env-bridge/issues"
+    "url": "https://github.com/YOUR_USERNAME/vescura/issues"
   },
-  "homepage": "https://github.com/YOUR_USERNAME/env-bridge#readme",
+  "homepage": "https://github.com/YOUR_USERNAME/vescura#readme",
   "contributes": {
     "viewsContainers": {
       "activitybar": [
         {
-          "id": "envsync",
-          "title": "EnvSync",
+          "id": "vescura",
+          "title": "Vescura",
           "icon": "media/icon.svg"
         }
       ]
     },
     "views": {
-      "envsync": [
+      "vescura": [
         {
-          "id": "envsync.panel",
+          "id": "vescura.panel",
           "name": "Sync Panel"
         }
       ]
     },
     "commands": [
       {
-        "command": "envsync.push",
-        "title": "EnvSync: Push",
+        "command": "vescura.push",
+        "title": "Vescura: Push",
         "icon": "$(cloud-upload)"
       },
       {
-        "command": "envsync.pushMapping",
-        "title": "EnvSync: Push Mapping",
+        "command": "vescura.pushMapping",
+        "title": "Vescura: Push Mapping",
         "icon": "$(cloud-upload)"
       },
       {
-        "command": "envsync.toggleEnabled",
-        "title": "EnvSync: Toggle Enabled"
+        "command": "vescura.toggleEnabled",
+        "title": "Vescura: Toggle Enabled"
       },
       {
-        "command": "envsync.toggleType",
-        "title": "EnvSync: Toggle Type"
+        "command": "vescura.toggleType",
+        "title": "Vescura: Toggle Type"
       },
       {
-        "command": "envsync.manageTokens",
-        "title": "EnvSync: Manage Tokens",
+        "command": "vescura.manageTokens",
+        "title": "Vescura: Manage Tokens",
         "icon": "$(key)"
       },
       {
-        "command": "envsync.addMapping",
-        "title": "EnvSync: New Mapping",
+        "command": "vescura.addMapping",
+        "title": "Vescura: New Mapping",
         "icon": "$(add)"
       },
       {
-        "command": "envsync.deleteMapping",
-        "title": "EnvSync: Remove Mapping",
+        "command": "vescura.deleteMapping",
+        "title": "Vescura: Remove Mapping",
         "icon": "$(trash)"
       },
       {
-        "command": "envsync.pull",
-        "title": "EnvSync: Pull from Remote",
+        "command": "vescura.pull",
+        "title": "Vescura: Pull from Remote",
         "icon": "$(cloud-download)"
       }
     ],
     "menus": {
       "editor/title": [
         {
-          "command": "envsync.push",
+          "command": "vescura.push",
           "when": "resourceFilename =~ /^\\.env/",
           "group": "navigation"
         }
       ],
       "view/title": [
         {
-          "command": "envsync.addMapping",
-          "when": "view == envsync.panel",
+          "command": "vescura.addMapping",
+          "when": "view == vescura.panel",
           "group": "navigation"
         }
       ],
       "view/item/context": [
         {
-          "command": "envsync.deleteMapping",
-          "when": "view == envsync.panel && viewItem == mapping",
+          "command": "vescura.deleteMapping",
+          "when": "view == vescura.panel && viewItem == mapping",
           "group": "inline"
         }
       ]
