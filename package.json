@@ -1,10 +1,10 @@
 {
   "name": "vescura",
-  "displayName": "Vescura",
-  "description": "Vescura — Push and pull .env files to GitHub Secrets & GitLab CI/CD Variables without leaving VS Code. Per-variable secret/plain control via inline CodeLens.",
+  "displayName": "Vescura – Sync .env to GitHub Secrets & GitLab CI/CD",
+  "description": "Sync .env files to GitHub Secrets and GitLab CI/CD Variables without leaving VS Code. Push environment variables as secrets or plain values, pull remote secrets into local .env files, and control each variable inline with CodeLens.",
   "version": "0.0.1",
   "license": "Provided license",
-  "publisher": "YOUR_PUBLISHER_ID",
+  "publisher": "ArseniyDev",
   "icon": "media/icon.png",
   "galleryBanner": {
     "color": "#0d1117",
@@ -40,12 +40,12 @@
   "main": "./dist/extension.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/YOUR_USERNAME/vescura"
+    "url": "https://github.com/ArseniyX/vescura"
   },
   "bugs": {
-    "url": "https://github.com/YOUR_USERNAME/vescura/issues"
+    "url": "https://github.com/ArseniyX/vescura/issues"
   },
-  "homepage": "https://github.com/YOUR_USERNAME/vescura#readme",
+  "homepage": "https://github.com/ArseniyX/vescura#readme",
   "contributes": {
     "viewsContainers": {
       "activitybar": [
@@ -130,6 +130,8 @@
   },
   "scripts": {
     "vscode:prepublish": "pnpm run package",
+    "vsce:package": "vsce package --no-dependencies",
+    "vsce:publish": "vsce publish --no-dependencies",
     "compile": "pnpm run check-types && pnpm run lint && node esbuild.js",
     "watch": "npm-run-all -p watch:*",
     "watch:esbuild": "node esbuild.js --watch",
